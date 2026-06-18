@@ -9,7 +9,7 @@ from datetime import datetime
 OUTPUT_FILE = "rates.json"
 
 # 몇 초마다 API를 다시 받을지 정합니다.
-UPDATE_SECONDS = 60
+UPDATE_SECONDS = 2
 
 
 # from_currency에서 to_currency로 바꿀 때의 환율 하나를 가져옵니다.
@@ -68,8 +68,6 @@ def main():
                 print("환율을 가져오지 못했습니다:", error)
 
             time.sleep(UPDATE_SECONDS)
-    except KeyboardInterrupt:
-        print("\n환율 자동 업데이트를 종료합니다.")
 
 
 if __name__ == "__main__":

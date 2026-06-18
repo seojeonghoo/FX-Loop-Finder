@@ -2,6 +2,6 @@
     "code-runner.runInTerminal": true,
     "code-runner.saveFileBeforeRun": true,
     "code-runner.executorMap": {
-        "c": "cls; chcp.com 65001 > $null; cd $dir; gcc $fileName -o FXLoopFinder.exe -Wall -Wextra -finput-charset=UTF-8 -fexec-charset=UTF-8 -lwininet; .\\FXLoopFinder.exe"
+        "c": "cls; chcp.com 65001 > $null; cd $dir; gcc $fileName -o FXLoopFinder.exe -Wall -Wextra -finput-charset=UTF-8 -fexec-charset=UTF-8; .\\FXLoopFinder.exe"
     }
 }
