@@ -1,11 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "fx_loop.h"
+
+#define 통화개수 3
+#define 이름길이 4
+#define 버퍼크기 4096
+
+#define 원화 0
+#define 달러 1
+#define 엔화 2
+
+void 헤더출력(void);
 
 /* 통화 이름과 환율을 저장하는 전역 배열입니다. */
-char 통화이름들[CURRENCY_COUNT][NAME_LENGTH] = {"KRW", "USD", "JPY"};
-double 환율[CURRENCY_COUNT][CURRENCY_COUNT] = {
+char 통화이름들[통화개수][이름길이] = {"KRW", "USD", "JPY"};
+double 환율[통화개수][통화개수] = {
     {0.0, 0.00066, 0.0},
     {0.0, 0.0, 160.31},
     {9.4632, 0.0, 0.0}
@@ -68,13 +77,13 @@ void 환율표시(void) {
     printf("════════════════════════════════════════════════════════════════\n");
     printf("                        현재 환율 정보\n");
     printf("════════════════════════════════════════════════════════════════\n");
-    printf("1 %s = %.8f %s\n", 통화이름들[KRW], 환율[KRW][USD], 통화이름들[USD]);
-    printf("1 %s = %.8f %s\n", 통화이름들[USD], 환율[USD][JPY], 통화이름들[JPY]);
-    printf("1 %s = %.8f %s\n", 통화이름들[JPY], 환율[JPY][KRW], 통화이름들[KRW]);
+    printf("1 %s = %.8f %s\n", 통화이름들[원화], 환율[원화][달러], 통화이름들[달러]);
+    printf("1 %s = %.8f %s\n", 통화이름들[달러], 환율[달러][엔화], 통화이름들[엔화]);
+    printf("1 %s = %.8f %s\n", 통화이름들[엔화], 환율[엔화][원화], 통화이름들[원화]);
     printf("════════════════════════════════════════════════════════════════\n");
 }
 
-int 파일읽기(const char *파일이름, char *버퍼, int 버퍼크기) {
+int 파일읽기(const char *파일이름, char *버퍼, int 최대크기) {
     FILE *파일;
     int 읽은바이트;
 
@@ -85,7 +94,7 @@ int 파일읽기(const char *파일이름, char *버퍼, int 버퍼크기) {
         return 0;
     }
 
-    읽은바이트 = (int)fread(버퍼, 1, 버퍼크기 - 1, 파일);
+    읽은바이트 = (int)fread(버퍼, 1, 최대크기 - 1, 파일);
     버퍼[읽은바이트] = '\0';
     fclose(파일);
 
@@ -114,12 +123,12 @@ double JSON환율파싱(const char *JSON데이터, const char *키이름) {
 }
 
 int 환율업데이트(void) {
-    char JSON데이터[BUFFER_SIZE];
+    char JSON데이터[버퍼크기];
     double 원달러환율;
     double 달러엔환율;
     double 엔원환율;
 
-    if (!파일읽기("rates.json", JSON데이터, BUFFER_SIZE)) {
+    if (!파일읽기("rates.json", JSON데이터, 버퍼크기)) {
         return 0;
     }
 
@@ -131,9 +140,9 @@ int 환율업데이트(void) {
         return 0;
     }
 
-    환율[KRW][USD] = 원달러환율;
-    환율[USD][JPY] = 달러엔환율;
-    환율[JPY][KRW] = 엔원환율;
+    환율[원화][달러] = 원달러환율;
+    환율[달러][엔화] = 달러엔환율;
+    환율[엔화][원화] = 엔원환율;
 
     return 1;
 }
@@ -145,9 +154,9 @@ double 차익계산(double 시작금액, double 수수료율) {
     수수료비율 = 1.0 - 수수료율 / 100.0;
     결과금액 = 시작금액;
 
-    결과금액 = 결과금액 * 환율[KRW][USD] * 수수료비율;
-    결과금액 = 결과금액 * 환율[USD][JPY] * 수수료비율;
-    결과금액 = 결과금액 * 환율[JPY][KRW] * 수수료비율;
+    결과금액 = 결과금액 * 환율[원화][달러] * 수수료비율;
+    결과금액 = 결과금액 * 환율[달러][엔화] * 수수료비율;
+    결과금액 = 결과금액 * 환율[엔화][원화] * 수수료비율;
 
     return 결과금액;
 }
@@ -244,3 +253,4 @@ int main(void) {
 
     return 0;
 }
+
