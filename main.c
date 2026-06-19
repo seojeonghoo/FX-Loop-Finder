@@ -4,38 +4,37 @@
 #include "fx_loop.h"
 
 /* 통화 이름과 환율을 저장하는 전역 배열입니다. */
-char currencyNames[CURRENCY_COUNT][NAME_LENGTH] = {"KRW", "USD", "JPY"};
-
-double rates[CURRENCY_COUNT][CURRENCY_COUNT] = {
-    {1.0, 0.00066, 0.0},
-    {0.0, 1.0, 160.31},
-    {9.4632, 0.0, 1.0}
+char 통화이름들[CURRENCY_COUNT][NAME_LENGTH] = {"KRW", "USD", "JPY"};
+double 환율[CURRENCY_COUNT][CURRENCY_COUNT] = {
+    {0.0, 0.00066, 0.0},
+    {0.0, 0.0, 160.31},
+    {9.4632, 0.0, 0.0}
 };
 
 /* 화면 전환에 사용하는 간단한 보조 함수들입니다. */
-void clearScreen(void) {
+void 화면지우기(void) {
     system("cls");
 }
 
-void clearInputLine(void) {
-    int ch;
+void 입력버퍼정리(void) {
+    int 문자;
 
-    while ((ch = getchar()) != '\n' && ch != EOF) {
+    while ((문자 = getchar()) != '\n' && 문자 != EOF) {
     }
 }
 
-void waitForEnter(void) {
+void 엔터대기(void) {
     printf("\nEnter를 누르면 메뉴로 돌아갑니다...");
     getchar();
 }
 
-void showHeader(void) {
-    clearScreen();
-    printHeader();
+void 헤더표시(void) {
+    화면지우기();
+    헤더출력();
 }
 
 /* 프로그램 로고를 출력합니다. */
-void printHeader(void) {
+void 헤더출력(void) {
     printf("\n");
     printf("╔══════════════════════════════════════════════════════╗\n");
     printf("║                                                      ║\n");
@@ -54,7 +53,7 @@ void printHeader(void) {
     printf("╚══════════════════════════════════════════════════════╝\n");
 }
 
-void printMenu(void) {
+void 메뉴출력(void) {
     printf("\n");
     printf("1. 실시간 환율 업데이트\n");
     printf("2. 차익 분석하기\n");
@@ -64,119 +63,113 @@ void printMenu(void) {
     printf("메뉴 번호를 입력하세요: ");
 }
 
-void displayRates(void) {
+void 환율표시(void) {
     printf("\n");
     printf("════════════════════════════════════════════════════════════════\n");
     printf("                        현재 환율 정보\n");
     printf("════════════════════════════════════════════════════════════════\n");
-    printf("1 %s = %.8f %s\n", currencyNames[KRW], rates[KRW][USD], currencyNames[USD]);
-    printf("1 %s = %.8f %s\n", currencyNames[USD], rates[USD][JPY], currencyNames[JPY]);
-    printf("1 %s = %.8f %s\n", currencyNames[JPY], rates[JPY][KRW], currencyNames[KRW]);
+    printf("1 %s = %.8f %s\n", 통화이름들[KRW], 환율[KRW][USD], 통화이름들[USD]);
+    printf("1 %s = %.8f %s\n", 통화이름들[USD], 환율[USD][JPY], 통화이름들[JPY]);
+    printf("1 %s = %.8f %s\n", 통화이름들[JPY], 환율[JPY][KRW], 통화이름들[KRW]);
     printf("════════════════════════════════════════════════════════════════\n");
 }
 
-/* rates.json 전체 내용을 문자열 배열에 읽어 옵니다. */
-int readFile(const char *fileName, char *buffer, int bufferSize) {
-    FILE *file;
-    int totalRead;
+int 파일읽기(const char *파일이름, char *버퍼, int 버퍼크기) {
+    FILE *파일;
+    int 읽은바이트;
 
-    buffer[0] = '\0';
+    버퍼[0] = '\0';
 
-    file = fopen(fileName, "r");
-    if (file == NULL) {
+    파일 = fopen(파일이름, "r");
+    if (파일 == NULL) {
         return 0;
     }
 
-    totalRead = (int)fread(buffer, 1, bufferSize - 1, file);
-    buffer[totalRead] = '\0';
-    fclose(file);
+    읽은바이트 = (int)fread(버퍼, 1, 버퍼크기 - 1, 파일);
+    버퍼[읽은바이트] = '\0';
+    fclose(파일);
 
-    return totalRead > 0;
+    return 읽은바이트 > 0;
 }
 
-/* JSON 문자열에서 keyName 뒤에 있는 실수 값을 찾아 읽습니다. */
-double parseJsonRate(const char *json, const char *keyName) {
-    char key[32];
-    char *position;
-    double rate;
+double JSON환율파싱(const char *JSON데이터, const char *키이름) {
+    char 키[32];
+    char *위치;
+    double 환율값;
 
-    sprintf(key, "\"%s\":", keyName);
-    position = strstr(json, key);
+    sprintf(키, "\"%s\":", 키이름);
+    위치 = strstr(JSON데이터, 키);
 
-    if (position == NULL) {
+    if (위치 == NULL) {
         return 0.0;
     }
 
-    position = position + strlen(key);
+    위치 = 위치 + strlen(키);
 
-    if (sscanf(position, "%lf", &rate) != 1) {
+    if (sscanf(위치, "%lf", &환율값) != 1) {
         return 0.0;
     }
 
-    return rate;
+    return 환율값;
 }
 
-/* Python이 만든 rates.json에서 최신 환율을 가져옵니다. */
-int updateRates(void) {
-    char json[BUFFER_SIZE];
-    double krwUsd;
-    double usdJpy;
-    double jpyKrw;
+int 환율업데이트(void) {
+    char JSON데이터[BUFFER_SIZE];
+    double 원달러환율;
+    double 달러엔환율;
+    double 엔원환율;
 
-    if (!readFile("rates.json", json, BUFFER_SIZE)) {
+    if (!파일읽기("rates.json", JSON데이터, BUFFER_SIZE)) {
         return 0;
     }
 
-    krwUsd = parseJsonRate(json, "KRW_USD");
-    usdJpy = parseJsonRate(json, "USD_JPY");
-    jpyKrw = parseJsonRate(json, "JPY_KRW");
+    원달러환율 = JSON환율파싱(JSON데이터, "KRW_USD");
+    달러엔환율 = JSON환율파싱(JSON데이터, "USD_JPY");
+    엔원환율 = JSON환율파싱(JSON데이터, "JPY_KRW");
 
-    if (krwUsd <= 0.0 || usdJpy <= 0.0 || jpyKrw <= 0.0) {
+    if (원달러환율 <= 0.0 || 달러엔환율 <= 0.0 || 엔원환율 <= 0.0) {
         return 0;
     }
 
-    rates[KRW][USD] = krwUsd;
-    rates[USD][JPY] = usdJpy;
-    rates[JPY][KRW] = jpyKrw;
+    환율[KRW][USD] = 원달러환율;
+    환율[USD][JPY] = 달러엔환율;
+    환율[JPY][KRW] = 엔원환율;
 
     return 1;
 }
 
-/* KRW -> USD -> JPY -> KRW 순서로 환전한 최종 금액을 계산합니다. */
-double calculateArbitrage(double startAmount, double feePercent) {
-    double feeRate;
-    double result;
+double 차익계산(double 시작금액, double 수수료율) {
+    double 수수료비율;
+    double 결과금액;
 
-    feeRate = 1.0 - feePercent / 100.0;
-    result = startAmount;
+    수수료비율 = 1.0 - 수수료율 / 100.0;
+    결과금액 = 시작금액;
 
-    result = result * rates[KRW][USD] * feeRate;
-    result = result * rates[USD][JPY] * feeRate;
-    result = result * rates[JPY][KRW] * feeRate;
+    결과금액 = 결과금액 * 환율[KRW][USD] * 수수료비율;
+    결과금액 = 결과금액 * 환율[USD][JPY] * 수수료비율;
+    결과금액 = 결과금액 * 환율[JPY][KRW] * 수수료비율;
 
-    return result;
+    return 결과금액;
 }
 
-double calculateProfitRate(double startAmount, double finalAmount) {
-    return (finalAmount - startAmount) / startAmount * 100.0;
+double 수익률계산(double 시작금액, double 최종금액) {
+    return (최종금액 - 시작금액) / 시작금액 * 100.0;
 }
 
-void displayResult(double startAmount, double finalAmount, double profitRate) {
-    double profit;
-
-    profit = finalAmount - startAmount;
+void 결과표시(double 시작금액, double 최종금액, double 수익률) {
+    double 손익 = 최종금액 - 시작금액;
 
     printf("\n");
     printf("════════════════════════════════════════════════════════════════\n");
     printf("                           분석 결과\n");
     printf("════════════════════════════════════════════════════════════════\n");
     printf("환전 경로 : KRW -> USD -> JPY -> KRW\n");
-    printf("시작 금액 : %.2f 원\n", startAmount);
-    printf("최종 금액 : %.2f 원\n", finalAmount);
-    printf("예상 손익 : %.2f 원\n", profit);
-    printf("수익률    : %.4f%%\n", profitRate);
+    printf("시작 금액 : %.2f 원\n", 시작금액);
+    printf("최종 금액 : %.2f 원\n", 최종금액);
+    printf("예상 손익 : %.2f 원\n", 손익);
+    printf("수익률    : %.4f%%\n", 수익률);
 
-    if (profit > 0.0) {
+    if (손익 > 0.0) {
         printf("판정      : 차익 가능성이 있습니다.\n");
     } else {
         printf("판정      : 차익 가능성이 낮습니다.\n");
@@ -186,70 +179,66 @@ void displayResult(double startAmount, double finalAmount, double profitRate) {
 }
 
 int main(void) {
-    int menu;
-    double startAmount;
-    double feePercent;
-    double finalAmount;
-    double profitRate;
+    int 메뉴선택;
+    double 시작금액;
+    double 수수료율;
+    double 최종금액;
+    double 수익률;
 
     while (1) {
-        showHeader();
-        printMenu();
-        scanf("%d", &menu);
-        clearInputLine();
+        헤더표시();
+        메뉴출력();
+        scanf("%d", &메뉴선택);
+        입력버퍼정리();
 
-        if (menu == 1) {
-            showHeader();
+        if (메뉴선택 == 1) {
+            헤더표시();
             printf("\nrates.json에서 환율 정보를 읽는 중입니다...\n");
 
-            if (updateRates()) {
-                showHeader();
+            if (환율업데이트()) {
+                헤더표시();
                 printf("환율 정보를 업데이트했습니다.\n");
-                displayRates();
+                환율표시();
             } else {
-                showHeader();
+                헤더표시();
                 printf("rates.json 파일을 읽지 못했습니다.\n");
                 printf("먼저 Python 프로그램을 실행해 rates.json을 만들어주세요.\n");
             }
 
-            waitForEnter();
-        } else if (menu == 2) {
-            showHeader();
+            엔터대기();
+        } else if (메뉴선택 == 2) {
+            헤더표시();
             printf("시작 금액을 입력하세요(KRW): ");
-            scanf("%lf", &startAmount);
+            scanf("%lf", &시작금액);
 
             printf("환전 1회당 수수료율을 입력하세요(%%): ");
-            scanf("%lf", &feePercent);
-            clearInputLine();
+            scanf("%lf", &수수료율);
+            입력버퍼정리();
 
-            if (startAmount <= 0.0) {
-                showHeader();
+            if (시작금액 <= 0.0) {
+                헤더표시();
                 printf("시작 금액은 0보다 커야 합니다.\n");
-                waitForEnter();
-            } else if (feePercent < 0.0 || feePercent >= 100.0) {
-                showHeader();
+                엔터대기();
+            } else if (수수료율 < 0.0 || 수수료율 >= 100.0) {
+                헤더표시();
                 printf("수수료율은 0 이상 100 미만이어야 합니다.\n");
-                waitForEnter();
+                엔터대기();
             } else {
-                finalAmount = calculateArbitrage(startAmount, feePercent);
-                profitRate = calculateProfitRate(startAmount, finalAmount);
+                최종금액 = 차익계산(시작금액, 수수료율);
+                수익률 = 수익률계산(시작금액, 최종금액);
 
-                showHeader();
-                displayResult(startAmount, finalAmount, profitRate);
-                waitForEnter();
+                헤더표시();
+                결과표시(시작금액, 최종금액, 수익률);
+                엔터대기();
             }
-        } else if (menu == 3) {
-            showHeader();
-            displayRates();
-            waitForEnter();
-        } else if (menu == 4) {
-            showHeader();
+        } else if (메뉴선택 == 3) {
+            헤더표시();
+            환율표시();
+            엔터대기();
+        } else if (메뉴선택 == 4) {
+            헤더표시();
             printf("프로그램을 종료합니다.\n");
             break;
-        } else {
-            showHeader();
-            printf("없는 메뉴입니다.\n");
-            waitForEnter();
         }
     }
 

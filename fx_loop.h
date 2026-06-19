@@ -12,22 +12,22 @@
 #define JPY 2
 
 /* 화면 관련 함수 */
-void clearScreen(void);
-void clearInputLine(void);
-void waitForEnter(void);
-void showHeader(void);
-void printHeader(void);
-void printMenu(void);
-void displayRates(void);
+void 화면지우기(void);
+void 입력버퍼정리(void);
+void 엔터대기(void);
+void 헤더표시(void);
+void 헤더출력(void);
+void 메뉴출력(void);
+void 환율표시(void);
 
 /* rates.json 읽기 관련 함수 */
-int readFile(const char *fileName, char *buffer, int bufferSize);
-double parseJsonRate(const char *json, const char *keyName);
-int updateRates(void);
+int 파일읽기(const char *파일이름, char *버퍼, int 버퍼크기);
+double JSON환율파싱(const char *JSON데이터, const char *키이름);
+int 환율업데이트(void);
 
 /* 계산 관련 함수 */
-double calculateArbitrage(double startAmount, double feePercent);
-double calculateProfitRate(double startAmount, double finalAmount);
-void displayResult(double startAmount, double finalAmount, double profitRate);
+double 차익계산(double 시작금액, double 수수료율);
+double 수익률계산(double 시작금액, double 최종금액);
+void 결과표시(double 시작금액, double 최종금액, double 수익률);
 
 #endif
