@@ -68,6 +68,8 @@ def main():
                 print("환율을 가져오지 못했습니다:", error)
 
             time.sleep(UPDATE_SECONDS)
+    except KeyboardInterrupt:
+        print("프로그램을 종료합니다.")
 
 
 if __name__ == "__main__":
