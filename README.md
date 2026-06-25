@@ -1,10 +1,9 @@
 # FX Loop Finder
 
 <p align="left">
-  <img src="https://img.shields.io/badge/DIMIGO-KDMHS-0B1F4D?style=for-the-badge&labelColor=005BAC" />
-  <img src="https://img.shields.io/badge/C%20Language-00599C?style=for-the-badge&logo=c&logoColor=white" />
-  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" />
-  <img src="https://img.shields.io/badge/GCC-Compiler-4EAA25?style=for-the-badge&logo=gnu&logoColor=white" />
+  <img alt="KDMHS" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjYiIGhlaWdodD0iMjgiIHZpZXdCb3g9IjAgMCAxMjYgMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iS0RNSFMiPjxyZWN0IHdpZHRoPSIxMjYiIGhlaWdodD0iMjgiIHJ4PSI2IiBmaWxsPSIjY2QyMzcwIi8+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoOCA1KSBzY2FsZSgwLjA0NTM2KSI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTM0Ny44LDIyOC43Yy0xNi4yNiw4MS42NC05NS42MSwxMzQuNjQtMTc3LjI1LDExOC4zOS04MS42NC0xNi4yNi0xMzQuNjQtOTUuNjEtMTE4LjM5LTE3Ny4yNSwxNi4yNi04MS42NCw5NS42MS0xMzQuNjQsMTc3LjI1LTExOC4zOSwzNS41NCw3LjA4LDY3LjM0LDI2LjcyLDg5LjU5LDU1LjMzbC0yNi43Myw0OS4zMWMtMjMuOTQtNTEuMDQtODQuNzUtNzMuMDItMTM1LjgtNDkuMDctNTEuMDQsMjMuOTQtNzMuMDIsODQuNzUtNDkuMDcsMTM1LjgsMjMuOTQsNTEuMDQsODQuNzUsNzMuMDIsMTM1LjgsNDkuMDcsMTkuNjgtOS4yMywzNS45MS0yNC41MSw0Ni4zMS00My42MWw1My4wMS05OC42NCwyMy4wNS00MS4wMmMtNy40LTEzLjM5LTE2LjM4LTI1Ljg1LTI2LjczLTM3LjExQzI2OC43MS01LjEzLDE0OS43Ny0xMC40NSw3My4xMSw1OS42NC0zLjU0LDEyOS43Mi04Ljg3LDI0OC42Nyw2MS4yMiwzMjUuMzNjNzAuMDksNzYuNjUsMTg5LjA0LDgxLjk4LDI2NS42OSwxMS44OSwzMC4xNS0yNy41Nyw1MC41LTY0LjIxLDU3Ljk5LTEwNC4zNmwtMzcuMTEtNC4xNWgwWk0xOTkuNjEsMjU3Ljc0Yy0zMi4zMywwLTU4LjUzLTI2LjItNTguNTMtNTguNTNzMjYuMi01OC41Myw1OC41My01OC41Myw1OC41MywyNi4yLDU4LjUzLDU4LjUzLTI2LjIsNTguNTMtNTguNTMsNTguNTMiLz48L2c+PHRleHQgeD0iMzQiIHk9IjE4LjciIGZvbnQtZmFtaWx5PSJTZWdvZSBVSSxBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmb250LXdlaWdodD0iNzAwIiBsZXR0ZXItc3BhY2luZz0iLjYiIGZpbGw9IiNmMmE2YzkiPktETUhTPC90ZXh0Pjwvc3ZnPg==" />
+  <img src="https://img.shields.io/badge/C%20Language-00599C?style=flat-square&logo=c&logoColor=white" />
+  <img src="https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white" />
 </p>
 
 `FX Loop Finder`는 원화(KRW), 달러(USD), 엔화(JPY)를 차례대로 환전했을 때 차익이 생기는지 계산하는 C 콘솔 프로그램입니다.
