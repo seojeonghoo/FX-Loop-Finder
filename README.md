@@ -1,7 +1,13 @@
 # FX Loop Finder
 
-`FX Loop Finder`는 원화(KRW), 달러(USD), 엔화(JPY)를 차례대로 환전했을 때 차익이 생기는지 계산하는 C 콘솔 프로그램입니다.
+<p align="left">
+  <img src="https://img.shields.io/badge/DIMIGO-KDMHS-0B1F4D?style=for-the-badge&labelColor=005BAC" />
+  <img src="https://img.shields.io/badge/C%20Language-00599C?style=for-the-badge&logo=c&logoColor=white" />
+  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" />
+  <img src="https://img.shields.io/badge/GCC-Compiler-4EAA25?style=for-the-badge&logo=gnu&logoColor=white" />
+</p>
 
+`FX Loop Finder`는 원화(KRW), 달러(USD), 엔화(JPY)를 차례대로 환전했을 때 차익이 생기는지 계산하는 C 콘솔 프로그램입니다.
 사용자가 시작 금액과 수수료율을 입력하면 `KRW -> USD -> JPY -> KRW` 경로로 환전한 최종 금액을 계산하고, 시작 금액보다 커지는지 확인해 아비트라지 가능성을 판단합니다.
 
 Python 프로그램이 환율 API에서 값을 받아 `rates.json` 파일로 저장하고, C 프로그램은 그 JSON 파일을 읽어서 환율 계산을 합니다.
